@@ -96,8 +96,7 @@ export MONO_CONFIG="/app/mono/etc/mono/config"
 # install certificates from the host
 # using this ensures that the certs are managed by heroku
 topic "Installing SSL certificates"
-mcs $BUILDPACK_DIR/scripts/cert-sync.cs /r:Mono.Security.dll /out:$BUILDPACK_DIR/cert-sync.exe
-mono $BUILDPACK_DIR/cert-sync.exe --quiet --user /etc/ssl/certs/ca-certificates.crt
+cert-sync --quiet --user /etc/ssl/certs/ca-certificates.crt
 
 # most of these are needed for tools like mkbundle to work
 # (and will only work with the 'full' mono build)
@@ -142,7 +141,7 @@ else
     mkdir -p $BUILD_DIR/packages
     cp -R $MONO_CACHE_DIR/packages/* $BUILD_DIR/packages
   fi
-  mono $BUILDPACK_DIR/nuget.exe restore -NonInteractive | indent
+  mono $BUILDPACK_DIR/nuget.exe restore -NonInteractive $SLN | indent
   # and copy it back
   if [ -d $BUILD_DIR/packages ]; then
     mkdir -p $MONO_CACHE_DIR/packages
